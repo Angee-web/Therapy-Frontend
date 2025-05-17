@@ -10,10 +10,29 @@ export const postQuestionnaire = createAsyncThunk(
   "questionnaire/postQuestionnaire",
   async (questionnaireData, { rejectWithValue }) => {
     try {
-      const response = await api.post(
-       `/question`,
-        questionnaireData
-      );
+      // Retrieve additional data from localStorage
+      const scheduleId = localStorage.getItem("scheduleId");
+      const appointmentDate = localStorage.getItem("appointmentDate");
+      const appointmentTime = localStorage.getItem("appointmentTime");
+
+      // Combine the retrieved data with the questionnaireData
+      const completeData = {
+        ...questionnaireData,
+        scheduleId,
+        appointmentDate,
+        appointmentTime,
+      };
+
+      // Make the API request
+      const response = await api.post(`/question`, completeData);
+
+      // Save the response data to localStorage (if needed)
+      const newQuestionnaire = response.data?.newQuestionnaire;
+      if (newQuestionnaire) {
+        localStorage.setItem("questionnaireData", JSON.stringify(newQuestionnaire));
+        console.log("Saved to localStorage:", newQuestionnaire);
+      }
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "An error occurred");
@@ -73,7 +92,7 @@ export const deleteQuestionnaire = createAsyncThunk(
       const response = await api.delete(
         `/question/${id}`
       );
-      return { id }; // Return the ID of the deleted questionnaire
+      return { id, response }; // Return the ID of the deleted questionnaire
     } catch (error) {
       return rejectWithValue(error.response?.data || "An error occurred");
     }

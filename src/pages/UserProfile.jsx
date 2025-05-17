@@ -3,11 +3,13 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { deleteSchedule, fetchUserSchedules } from "@/store/therapy/schedule-slice"; // Import deleteSchedule
+import { useToast } from "@/hooks/useToast";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
   const { schedules, loading, error } = useSelector((state) => state.schedule);
   const { user } = useSelector((state) => state.auth);
+  const { toast } = useToast();
 
   // console.log(user);
 
@@ -62,7 +64,13 @@ const uniqueSchedules = schedules.reduce((acc, curr) => {
       .unwrap()
       .then(() => {
         // After successfully canceling the appointment, you can refetch the schedules or update the state
-        alert("Appointment canceled successfully");
+        // alert("Appointment canceled successfully");
+        toast({
+          title: "Appointment canceled successfully",
+          status: "success",
+          duration: 4000,
+          isClosable: true,
+        })
         dispatch(fetchUserSchedules(user.id)); // Refetch updated schedules
       })
       .catch((error) => {

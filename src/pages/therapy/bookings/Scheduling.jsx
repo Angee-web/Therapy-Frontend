@@ -10,6 +10,7 @@ import {
 const Scheduling = ({ onComplete, onDataChange }) => {
   const dispatch = useDispatch();
   const { loading, success, error } = useSelector((state) => state.schedule);
+  // console.log("schedule", success, error);
 
   const [formValues, setFormValues] = useState({
     accountName: "",
@@ -46,7 +47,7 @@ const Scheduling = ({ onComplete, onDataChange }) => {
         onDataChange(updatedValues); // Trigger the parent callback
       }
     } else {
-      console.error("Therapist or User ID missing from localStorage");
+      // console.error("Therapist or User ID missing from localStorage");
     }
   }, [formValues, onDataChange]);
 
@@ -87,12 +88,12 @@ const Scheduling = ({ onComplete, onDataChange }) => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     // Get therapistId, therapistName, and userId from localStorage
     const therapistId = localStorage.getItem("selectedTherapistId");
     const therapistName = localStorage.getItem("selectedTherapistName");
     const userId = localStorage.getItem("userId");
-
+  
     // Ensure all necessary data exists in localStorage
     if (!therapistId || !therapistName || !userId) {
       console.error(
@@ -100,7 +101,7 @@ const Scheduling = ({ onComplete, onDataChange }) => {
       );
       return;
     }
-
+  
     // Include therapistId, therapistName, and userId in the form data
     const scheduleData = {
       ...formValues, // Include existing form values
@@ -108,31 +109,38 @@ const Scheduling = ({ onComplete, onDataChange }) => {
       userId, // Add user ID from localStorage
       therapistName, // Add therapist full name from localStorage
     };
-
+  
     // Pass data to parent component (onDataChange)
     if (onDataChange) {
       onDataChange(scheduleData); // Send all relevant data to parent
     }
-
+  
     // Dispatch the action to post the schedule
     dispatch(postSchedule(scheduleData))
       .then((response) => {
-        console.log("Response from postSchedule:", response);
+        // console.log("Response from postSchedule:", response);
         // Assuming the response contains the schedule ID
         const scheduleId = response.payload?.newSchedule?._id; // Modify based on your response structure
-
+  
         if (scheduleId) {
-          // Save the schedule ID to localStorage
+          // Save the schedule ID, appointment date, and time to localStorage
           localStorage.setItem("scheduleId", scheduleId);
-          console.log("Schedule ID saved to localStorage:", scheduleId);
+          localStorage.setItem("appointmentDate", formValues.appointmentDate);
+          localStorage.setItem("appointmentTime", formValues.appointmentTime);
+  
+          // console.log("Saved to localStorage:", {
+          //   scheduleId,
+          //   appointmentDate: formValues.appointmentDate,
+          //   appointmentTime: formValues.appointmentTime,
+          // });
         }
       })
       .catch((error) => {
         console.error("Error submitting schedule:", error);
       });
-
+  
     // Optionally, log the data for debugging
-    console.log("Submitted schedule data:", scheduleData);
+    // console.log("Submitted schedule data:", scheduleData);
   };
 
   return (
@@ -159,7 +167,7 @@ const Scheduling = ({ onComplete, onDataChange }) => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              console.log("Form submitted");
+              // console.log("Form submitted");
               handleSubmit(e);
             }}
             className="flex flex-col gap-6 items-center justify-center lg:block lg:w-[60vw]"

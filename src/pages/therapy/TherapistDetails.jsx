@@ -28,6 +28,11 @@ const TherapistDetails = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // const handleScheduling = () => {
+  //   document.getElementById('bookings')?.scrollIntoView({ behavior: 'smooth' });
+  // };
+  
+
   const openModal = () => {
     // console.log("modal is to open...");
     setIsModalOpen(true);
@@ -264,13 +269,13 @@ const TherapistDetails = () => {
                             <TherapistProfile />
                           </div>
                           <div className="flex items-center justify-center m-auto mt-12">
-                            <a href="#bookings" className="lg:text-lg">
-                              <button className="mt-4 border py-2 px-6 bg-gradient-to-r from-pink-400 via-blue-600 to-pink-600 rounded-3xl md:text-sm mb-4 w-fit text-white lg:text-lg ">
-                                <a onClick={handleScheduling}>
-                                  Book Appointment
-                                </a>
-                              </button>
-                            </a>
+                          <button
+  onClick={handleScheduling}
+  className="mt-4 border py-2 px-6 bg-gradient-to-r from-pink-400 via-blue-600 to-pink-600 rounded-3xl md:text-sm mb-4 w-fit text-white lg:text-lg"
+>
+  Book Appointment
+</button>
+
                           </div>
                           <hr className="w-[100%] h-[2px] bg-slate-300 mx-0 mt-2" />
                           <div className="flex flex-col items-center justify-center gap-2 w-full mt-4 mb-8 text-lg">
@@ -444,18 +449,18 @@ const TherapistDetails = () => {
           this works if the language value is a string. it will display in block form */}
             {/* split the langauges in the array */}
             <p>
-              {therapist?.languages?.length
-                ? therapist.languages.flatMap((lang) =>
-                    // Split if the language contains a comma, otherwise keep it as is
-                    lang.split(",").map((subLang, index) => (
-                      <React.Fragment key={index}>
-                        {subLang.trim()}
-                        <br />
-                      </React.Fragment>
-                    ))
-                  )
-                : null}
-            </p>
+  {therapist?.languages?.length
+    ? therapist.languages.flatMap((lang) =>
+        lang.split(",").map((subLang, index) => (
+          <React.Fragment key={`${lang}-${index}`}>
+            {subLang.trim()}
+            <br />
+          </React.Fragment>
+        ))
+      )
+    : null}
+</p>
+
 
             <p
               className="mt-4 font-semibold
@@ -485,11 +490,13 @@ const TherapistDetails = () => {
                 <TherapistProfile />
               </div>
               <div className="flex items-center justify-center m-auto mt-12">
-                <a href="#bookings" className="lg:text-lg">
-                  <button className="mt-4 border py-2 px-6 bg-gradient-to-r from-pink-400 via-blue-600 to-pink-600 rounded-3xl md:text-sm mb-4 w-fit text-white lg:text-lg ">
-                    <a onClick={handleScheduling}>Book Appointment</a>
-                  </button>
-                </a>
+              <button
+  onClick={handleScheduling}
+  className="mt-4 border py-2 px-6 bg-gradient-to-r from-pink-400 via-blue-600 to-pink-600 rounded-3xl md:text-sm mb-4 w-fit text-white lg:text-lg"
+>
+  Book Appointment
+</button>
+
               </div>
               <hr className="w-[100%] h-[2px] bg-slate-300 mx-0 mt-2" />
               <div className="flex items-center justify-center gap-2 w-full mt-4 mb-8 text-lg">

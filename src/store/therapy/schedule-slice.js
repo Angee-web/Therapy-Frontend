@@ -12,15 +12,24 @@ export const postSchedule = createAsyncThunk(
       // Make the API request
       const response = await api.post(`/schedule`, scheduleData);
 
-      // console.log("Response from posting schedule:", response.data); // Debugging log
+      // Extract the schedule data from the response
+      const newSchedule = response.data?.newSchedule;
 
-      // Save the schedule ID to localStorage
-      const scheduleId = response.data?.newSchedule?._id; // Adjust this based on your API response structure
-      if (scheduleId) {
-        localStorage.setItem("scheduleId", scheduleId);
-        // console.log("Schedule ID saved to localStorage:", scheduleId);
+      if (newSchedule) {
+        // Save the schedule ID and other relevant data to localStorage
+        localStorage.setItem("scheduleId", newSchedule._id);
+        localStorage.setItem("appointmentDate", newSchedule.appointmentDate);
+        localStorage.setItem("appointmentTime", newSchedule.appointmentTime);
+        localStorage.setItem("scheduleData", JSON.stringify(newSchedule));
+
+        // console.log("Saved to localStorage:", {
+        //   scheduleId: newSchedule._id,
+        //   appointmentDate: newSchedule.appointmentDate,
+        //   appointmentTime: newSchedule.appointmentTime,
+        //   scheduleData: newSchedule,
+        // });
       } else {
-        // console.warn("Schedule ID not found in the response.");
+        // console.warn("Schedule data not found in the response.");
       }
 
       return response.data;
@@ -97,7 +106,7 @@ export const fetchUserSchedules = createAsyncThunk(
   "schedule/fetchUserSchedules",
   async (userId, { rejectWithValue }) => {
     try {
-      // console.log("Fetching schedules for user ID:", userId); // Debugging log
+      // ßconsole.log("Fetching schedules for user ID:", userId); // Debugging log
       const response = await api.get(`/schedule/user/${userId}`);
       return response.data;
     } catch (error) {
@@ -166,7 +175,7 @@ const scheduleSlice = createSlice({
         state.error = null;
       })
       .addCase(getScheduleById.fulfilled, (state, action) => {
-        // console.log("Fetched schedule payload:", action.payload);
+        console.log("Fetched schedule payload:", action.payload);
         state.loading = false;
         state.schedule = action.payload;
       })
@@ -211,7 +220,7 @@ const scheduleSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchUserSchedules.fulfilled, (state, action) => {
-  // console.log("Fetched Schedules:", action.payload);
+  console.log("Fetched Schedules:", action.payload);
   state.status = "succeeded";
   state.schedules = action.payload.data; // Ensure only the array is stored
 })

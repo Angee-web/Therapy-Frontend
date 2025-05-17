@@ -89,20 +89,20 @@ const Therapists = ({ selectedFilter }) => {
   return (
     <div className="flex flex-wrap gap-5 my-10 justify-center">
       {Array.isArray(filteredTherapists) && filteredTherapists.length > 0 ? (
-        filteredTherapists.map((therapist) => (
-          <TherapyCards key={therapist._id} therapist={therapist} />
-        ))
-      ) : (
-        <div>
-          <p>No therapists found.</p>
-          <button
-            onClick={handleReload}
-            className="mt-4 px-6 py-2 bg-gradient-to-r from-pink-400 via-blue-600 to-pink-600 rounded-3xl hover:bg-blue-600 text-white"
-          >
-            Reload Page
-          </button>
-        </div>
-      )}
+  filteredTherapists.map((therapist, index) => (
+    <TherapyCards key={therapist._id || index} therapist={therapist} />
+  ))
+) : (
+  <div>
+    <p>No therapists found.</p>
+    <button
+      onClick={handleReload}
+      className="mt-4 px-6 py-2 bg-gradient-to-r from-pink-400 via-blue-600 to-pink-600 rounded-3xl hover:bg-blue-600 text-white"
+    >
+      Reload Page
+    </button>
+  </div>
+)}
     </div>
   );
 };
